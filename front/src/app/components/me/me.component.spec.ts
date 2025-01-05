@@ -8,6 +8,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SessionService } from 'src/app/services/session.service';
 
 import { MeComponent } from './me.component';
+import {By} from "@angular/platform-browser";
 
 describe('MeComponent', () => {
   let component: MeComponent;
@@ -41,5 +42,22 @@ describe('MeComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should display "You are admin" if user is admin', () => {
+    component.user = { admin: true } as any;
+    fixture.detectChanges();
+
+    const adminMessage = fixture.debugElement.query(By.css('.my2'));
+    expect(adminMessage).toBeTruthy();
+    expect(adminMessage.nativeElement.textContent).toContain('You are admin');
+  });
+
+  it('should display delete button if user is not admin', () => {
+    component.user = { admin: false } as any;
+    fixture.detectChanges();
+
+    const deleteButton = fixture.debugElement.query(By.css('button[color="warn"]'));
+    expect(deleteButton).toBeTruthy();
   });
 });
