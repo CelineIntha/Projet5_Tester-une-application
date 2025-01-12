@@ -10,7 +10,9 @@
     "e2e:ci": "ng run yoga:e2e-ci",
     "e2e:coverage": "npx nyc report --reporter=lcov --reporter=text-summary",
     "cypress:open": "cypress open",
-    "cypress:run": "cypress run"
+    "cypress:run": "cypress run",
+    "instrument": "npx nyc instrument --compact=false src instrumented",
+    "test:e2e": "npm run instrument && cypress run && npm run e2e:coverage"
   },
   "private": true,
   "dependencies": {
