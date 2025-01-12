@@ -6,6 +6,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SessionService } from 'src/app/services/session.service';
+import { expect } from '@jest/globals';
+
 
 import { MeComponent } from './me.component';
 import {By} from "@angular/platform-browser";
@@ -39,6 +41,10 @@ describe('MeComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
+
+  // ------------------------ //
+  //        Unit Tests        //
+  // ------------------------ //
 
   it('should create', () => {
     expect(component).toBeTruthy();
