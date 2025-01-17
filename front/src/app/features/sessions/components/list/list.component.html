@@ -1,35 +1,35 @@
 <div class="list">
   <mat-card>
     <mat-card-header fxLayout="row" fxLayoutAlign="space-between center">
-      <mat-card-title class="m0">Rentals available</mat-card-title>
-      <button *ngIf="user!.admin" mat-raised-button color="primary" routerLink="create">
+      <mat-card-title class="m0" data-cy="rentals-title">Rentals available</mat-card-title>
+      <button *ngIf="user!.admin" mat-raised-button color="primary" routerLink="create" data-cy="create-button">
         <mat-icon>add</mat-icon>
         <span class="ml1">Create</span>
       </button>
     </mat-card-header>
     <div class="items mt2" fxLayout="row wrap" fxLayout.lt-md="column">
-      <mat-card class="item" *ngFor="let session of (sessions$ | async)" fxFlex>
+      <mat-card class="item" *ngFor="let session of (sessions$ | async)" fxFlex data-cy="session-item">
         <mat-card-header>
-          <mat-card-title>{{ session.name }}</mat-card-title>
-          <mat-card-subtitle>
+          <mat-card-title data-cy="session-name">{{ session.name }}</mat-card-title>
+          <mat-card-subtitle data-cy="session-date">
             Session on {{ session.date | date: 'longDate'}}
           </mat-card-subtitle>
         </mat-card-header>
         <div mat-card-image fxLayoutAlign="center center">
-          <img class="picture" src="assets/sessions.png" alt="Yoga session">
+          <img class="picture" src="assets/sessions.png" alt="Yoga session" data-cy="session-image">
         </div>
         <mat-card-content>
-          <p>
+          <p data-cy="session-description">
             {{ session.description }}
           </p>
         </mat-card-content>
         <mat-card-actions>
-          <button mat-raised-button color="primary" [routerLink]="['detail',session.id]">
+          <button mat-raised-button color="primary" [routerLink]="['detail',session.id]" data-cy="session-detail-button">
             <mat-icon>search</mat-icon>
             <span class="ml1">Detail</span>
           </button>
           <button *ngIf="user!.admin" mat-raised-button color="primary"
-                  [routerLink]="['update',session.id]">
+                  [routerLink]="['update',session.id]" data-cy="session-edit-button">
             <mat-icon>edit</mat-icon>
             <span class="ml1">Edit</span>
           </button>
