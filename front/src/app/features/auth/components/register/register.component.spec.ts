@@ -24,62 +24,72 @@ describe('RegisterComponent', () => {
         MatCardModule,
         MatFormFieldModule,
         MatIconModule,
-        MatInputModule
-      ]
-    })
-      .compileComponents();
+        MatInputModule,
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(RegisterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+  // ------------------------ //
+  //        Unit Tests        //
+  // ------------------------ //
 
-  it('should have an invalid form on load', () => {
-    expect(component.form.valid).toBeFalsy();
-  });
-
-  it('should validate the form with correct values', () => {
-    component.form.setValue({
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john.doe@email.com',
-      password: 'password'
-    });
-    expect(component.form.valid).toBeTruthy();
-  });
-
-  it('should disable the submit button if form is invalid', () => {
-    const button = fixture.nativeElement.querySelector('button[type="submit"]');
-    expect(button.disabled).toBeTruthy();
-  });
-
-  it('should display an error message if registration fails', () => {
-    component.onError = true;
-    fixture.detectChanges();
-
-    const errorMessage = fixture.nativeElement.querySelector('.error');
-    expect(errorMessage).toBeTruthy();
-    expect(errorMessage.textContent).toContain('An error occurred');
-  });
-
-  it('should call the submit method when form is submitted', () => {
-    jest.spyOn(component, 'submit');
-
-    component.form.setValue({
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john.doe@email.com',
-      password: 'password'
+  describe('Unit Tests', () => {
+    it('should create', () => {
+      expect(component).toBeTruthy();
     });
 
-    const formElement = fixture.nativeElement.querySelector('form');
-    formElement.dispatchEvent(new Event('submit'));
+    it('should have an invalid form on load', () => {
+      expect(component.form.valid).toBeFalsy();
+    });
 
-    expect(component.submit).toHaveBeenCalled();
+    it('should validate the form with correct values', () => {
+      component.form.setValue({
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'john.doe@email.com',
+        password: 'password',
+      });
+      expect(component.form.valid).toBeTruthy();
+    });
+
+    it('should disable the submit button if form is invalid', () => {
+      const button = fixture.nativeElement.querySelector('button[type="submit"]');
+      expect(button.disabled).toBeTruthy();
+    });
   });
 
+  // ----------------------- //
+  //    Integration Tests    //
+  // ----------------------- //
+
+  describe('Integration Tests', () => {
+    it('should display an error message if registration fails', () => {
+      component.onError = true;
+      fixture.detectChanges();
+
+      const errorMessage = fixture.nativeElement.querySelector('.error');
+      expect(errorMessage).toBeTruthy();
+      expect(errorMessage.textContent).toContain('An error occurred');
+    });
+
+    it('should call the submit method when form is submitted', () => {
+      jest.spyOn(component, 'submit');
+
+      component.form.setValue({
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'john.doe@email.com',
+        password: 'password',
+      });
+
+      const formElement = fixture.nativeElement.querySelector('form');
+      formElement.dispatchEvent(new Event('submit'));
+
+      expect(component.submit).toHaveBeenCalled();
+    });
+  });
 });
