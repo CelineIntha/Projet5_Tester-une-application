@@ -6,11 +6,11 @@ import com.openclassrooms.starterjwt.models.Session;
 import com.openclassrooms.starterjwt.models.User;
 import com.openclassrooms.starterjwt.repository.SessionRepository;
 import com.openclassrooms.starterjwt.repository.UserRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +19,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class SessionServiceTest {
 
 	@Mock
@@ -30,11 +31,11 @@ class SessionServiceTest {
 	@InjectMocks
 	private SessionService sessionService;
 
-	@BeforeEach
-	void setUp() {
-		MockitoAnnotations.openMocks(this);
-	}
 
+	/**
+	 * Teste que la méthode `create` sauvegarde correctement une session.
+	 * - Vérifie que la méthode `save` du repository est appelée.
+	 */
 	@Test
 	void create_shouldSaveSession() {
 		Session session = new Session();
@@ -43,9 +44,13 @@ class SessionServiceTest {
 		Session result = sessionService.create(session);
 
 		assertNotNull(result);
-		verify(sessionRepository, times(1)).save(session);
+		verify(sessionRepository, times(1)).save(session); // Vérifie que la méthode 'save' est appelée une fois
 	}
 
+	/**
+	 * Teste que la méthode `delete` supprime une session par son ID.
+	 * - Vérifie que la méthode `deleteById` est appelée avec le bon ID.
+	 */
 	@Test
 	void delete_shouldDeleteSessionById() {
 		Long sessionId = 1L;
@@ -55,6 +60,11 @@ class SessionServiceTest {
 		verify(sessionRepository, times(1)).deleteById(sessionId);
 	}
 
+	/**
+	 * Teste que la méthode `findAll` retourne toutes les sessions disponibles.
+	 * - Simule une liste de sessions.
+	 * - Vérifie que la liste retournée correspond à celle simulée.
+	 */
 	@Test
 	void findAll_shouldReturnAllSessions() {
 		List<Session> sessions = new ArrayList<>();
@@ -66,6 +76,11 @@ class SessionServiceTest {
 		verify(sessionRepository, times(1)).findAll();
 	}
 
+	/**
+	 * Teste que la méthode `getById` retourne une session existante.
+	 * - Simule qu'une session est trouvée.
+	 * - Vérifie que la session retournée correspond à celle simulée.
+	 */
 	@Test
 	void getById_shouldReturnSessionIfExists() {
 		Long sessionId = 1L;
@@ -79,6 +94,10 @@ class SessionServiceTest {
 		verify(sessionRepository, times(1)).findById(sessionId);
 	}
 
+	/**
+	 * Teste que la méthode `getById` retourne null si la session n'existe pas.
+	 * - Simule une absence de session pour un ID donné.
+	 */
 	@Test
 	void getById_shouldReturnNullIfNotExists() {
 		Long sessionId = 1L;
@@ -90,6 +109,10 @@ class SessionServiceTest {
 		verify(sessionRepository, times(1)).findById(sessionId);
 	}
 
+	/**
+	 * Teste que la méthode `update` met à jour une session existante.
+	 * - Simule la sauvegarde d'une session mise à jour.
+	 */
 	@Test
 	void update_shouldUpdateSession() {
 		Long sessionId = 1L;
@@ -104,6 +127,11 @@ class SessionServiceTest {
 		verify(sessionRepository, times(1)).save(session);
 	}
 
+	/**
+	 * Teste que la méthode `participate` ajoute un utilisateur à une session.
+	 * - Simule une session et un utilisateur valides.
+	 * - Vérifie que l'utilisateur est ajouté et que la session est sauvegardée.
+	 */
 	@Test
 	void participate_shouldAddUserToSession() {
 		Long sessionId = 1L;
@@ -124,6 +152,10 @@ class SessionServiceTest {
 		verify(sessionRepository, times(1)).save(session);
 	}
 
+	/**
+	 * Teste que la méthode `participate` lève une exception NotFoundException
+	 * si la session ou l'utilisateur n'existe pas.
+	 */
 	@Test
 	void participate_shouldThrowNotFoundExceptionIfSessionOrUserNotFound() {
 		Long sessionId = 1L;
@@ -134,6 +166,10 @@ class SessionServiceTest {
 		assertThrows(NotFoundException.class, () -> sessionService.participate(sessionId, userId));
 	}
 
+	/**
+	 * Teste que la méthode `participate` lève une exception BadRequestException
+	 * si l'utilisateur participe déjà à la session.
+	 */
 	@Test
 	void participate_shouldThrowBadRequestExceptionIfUserAlreadyParticipates() {
 		Long sessionId = 1L;
@@ -151,6 +187,9 @@ class SessionServiceTest {
 		assertThrows(BadRequestException.class, () -> sessionService.participate(sessionId, userId));
 	}
 
+	/**
+	 * Teste que la méthode `noLongerParticipate` retire un utilisateur d'une session.
+	 */
 	@Test
 	void noLongerParticipate_shouldRemoveUserFromSession() {
 		Long sessionId = 1L;
@@ -171,6 +210,10 @@ class SessionServiceTest {
 		verify(sessionRepository, times(1)).save(session);
 	}
 
+	/**
+	 * Teste que la méthode `noLongerParticipate` lève une exception NotFoundException
+	 * si la session n'existe pas.
+	 */
 	@Test
 	void noLongerParticipate_shouldThrowNotFoundExceptionIfSessionNotFound() {
 		Long sessionId = 1L;
@@ -181,6 +224,10 @@ class SessionServiceTest {
 		assertThrows(NotFoundException.class, () -> sessionService.noLongerParticipate(sessionId, userId));
 	}
 
+	/**
+	 * Teste que la méthode `noLongerParticipate` lève une exception BadRequestException
+	 * si l'utilisateur ne participe pas à la session.
+	 */
 	@Test
 	void noLongerParticipate_shouldThrowBadRequestExceptionIfUserNotInSession() {
 		Long sessionId = 1L;
