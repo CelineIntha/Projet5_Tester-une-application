@@ -70,6 +70,13 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+
+		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct</artifactId>
 			<version>1.5.1.Final</version>
@@ -80,6 +87,10 @@
 			<artifactId>mapstruct-processor</artifactId>
 			<version>1.5.1.Final</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
 		</dependency>
 	</dependencies>
 
@@ -109,24 +120,24 @@
 							<goal>report</goal>
 						</goals>
 					</execution>
-                    <execution>
-                        <id>merge</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>merge</goal>
-                        </goals>
-                        <configuration>
-                            <fileSets>
-                                <fileSet>
-                                    <directory>${project.build.directory}</directory>
-                                    <includes>
-                                        <include>**/*.exec</include>
-                                    </includes>
-                                </fileSet>
-                            </fileSets>
-                            <outputFile>${project.build.directory}/jacoco-merged.exec</outputFile>
-                        </configuration>
-                    </execution>
+					<execution>
+						<id>merge</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>merge</goal>
+						</goals>
+						<configuration>
+							<destFile>${project.build.directory}/jacoco-merged.exec</destFile>
+							<fileSets>
+								<fileSet>
+									<directory>${project.build.directory}</directory>
+									<includes>
+										<include>**/*.exec</include>
+									</includes>
+								</fileSet>
+							</fileSets>
+						</configuration>
+					</execution>
 					<execution>
 						<id>generate-report</id>
 						<phase>verify</phase>
