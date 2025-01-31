@@ -25,11 +25,18 @@ public class UserControllerIT {
 	@Autowired
 	private UserRepository userRepository;
 
+	/**
+	 * Nettoie la base de données après chaque test pour éviter les conflits de données.
+	 */
 	@AfterEach
 	public void tearDown() {
 		userRepository.deleteAll();
 	}
 
+	/**
+	 * Teste la récupération d'un utilisateur par son ID.
+	 * Doit renvoyer 200 OK avec les informations de l'utilisateur si celui-ci existe.
+	 */
 	@Test
 	@WithMockUser(username = "john.doe@email.com")
 	public void findById_ShouldReturnUser_WhenUserExists() throws Exception {
@@ -42,6 +49,10 @@ public class UserControllerIT {
 				.andExpect(jsonPath("$.email").value("john.doe@email.com"));
 	}
 
+	/**
+	 * Teste la récupération d'un utilisateur qui n'existe pas.
+	 * Doit renvoyer 404 Not Found.
+	 */
 	@Test
 	@WithMockUser(username = "john.doe@email.com")
 	public void findById_ShouldReturnNotFound_WhenUserDoesNotExist() throws Exception {
@@ -49,6 +60,10 @@ public class UserControllerIT {
 				.andExpect(status().isNotFound());
 	}
 
+	/**
+	 * Teste la récupération d'un utilisateur avec un ID invalide.
+	 * Doit renvoyer 400 Bad Request.
+	 */
 	@Test
 	@WithMockUser(username = "john.doe@email.com")
 	public void findById_ShouldReturnBadRequest_WhenIdIsInvalid() throws Exception {
@@ -56,6 +71,10 @@ public class UserControllerIT {
 				.andExpect(status().isBadRequest());
 	}
 
+	/**
+	 * Teste la suppression d'un utilisateur lorsqu'il est autorisé.
+	 * Doit renvoyer 200 OK si l'utilisateur peut être supprimé.
+	 */
 	@Test
 	@WithMockUser(username = "john.doe@email.com")
 	public void deleteUser_ShouldReturnOk_WhenAuthorized() throws Exception {
@@ -66,16 +85,24 @@ public class UserControllerIT {
 				.andExpect(status().isOk());
 	}
 
+	/**
+	 * Teste la suppression d'un utilisateur lorsqu'un autre utilisateur tente de le supprimer.
+	 * Doit renvoyer 401 Unauthorized.
+	 */
 	@Test
 	@WithMockUser(username = "another.user@email.com")
 	public void deleteUser_ShouldReturnUnauthorized_WhenNotAuthorized() throws Exception {
-		User user = new User("john.doe@example.com", "Doe", "John", "password", true);
+		User user = new User("john.doe@email.com", "Doe", "John", "password", true);
 		userRepository.save(user);
 
 		mockMvc.perform(delete("/api/user/" + user.getId()))
 				.andExpect(status().isUnauthorized());
 	}
 
+	/**
+	 * Teste la suppression d'un utilisateur avec un ID invalide.
+	 * Doit renvoyer 400 Bad Request.
+	 */
 	@Test
 	@WithMockUser(username = "john.doe@email.com")
 	public void deleteUser_ShouldReturnBadRequest_WhenIdIsInvalid() throws Exception {

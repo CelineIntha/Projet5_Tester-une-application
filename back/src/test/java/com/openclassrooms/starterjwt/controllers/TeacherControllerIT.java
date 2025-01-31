@@ -33,7 +33,7 @@ public class TeacherControllerIT {
 	}
 
 	@Test
-	@WithMockUser(username = "admin@email.com")
+	@WithMockUser(username = "authenticated_user@email.com")
 	public void findById_ShouldReturnTeacher_WhenTeacherExists() throws Exception {
 		Teacher teacher = Teacher.builder()
 				.firstName("Jane")
@@ -51,21 +51,21 @@ public class TeacherControllerIT {
 	}
 
 	@Test
-	@WithMockUser(username = "admin@email.com")
+	@WithMockUser(username = "authenticated_user@email.com")
 	public void findById_ShouldReturnNotFound_WhenTeacherDoesNotExist() throws Exception {
 		mockMvc.perform(get("/api/teacher/1234"))
 				.andExpect(status().isNotFound());
 	}
 
 	@Test
-	@WithMockUser(username = "admin@email.com")
+	@WithMockUser(username = "authenticated_user@email.com")
 	public void findById_ShouldReturnBadRequest_WhenIdIsInvalid() throws Exception {
 		mockMvc.perform(get("/api/teacher/invalidId"))
 				.andExpect(status().isBadRequest());
 	}
 
 	@Test
-	@WithMockUser(username = "admin@email.com")
+	@WithMockUser(username = "authenticated_user@email.com")
 	public void findAll_ShouldReturnListOfTeachers_WhenTeachersExist() throws Exception {
 		Teacher teacher1 = Teacher.builder()
 				.firstName("Jane")
@@ -92,7 +92,7 @@ public class TeacherControllerIT {
 	}
 
 	@Test
-	@WithMockUser(username = "admin@email.com")
+	@WithMockUser(username = "authenticated_user@email.com")
 	public void findAll_ShouldReturnEmptyList_WhenNoTeachersExist() throws Exception {
 		mockMvc.perform(get("/api/teacher"))
 				.andExpect(status().isOk())

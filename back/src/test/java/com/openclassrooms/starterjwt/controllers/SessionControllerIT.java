@@ -1,6 +1,7 @@
 package com.openclassrooms.starterjwt.controllers;
 
 import com.openclassrooms.starterjwt.annotations.IT;
+import com.openclassrooms.starterjwt.dto.SessionDto;
 import com.openclassrooms.starterjwt.models.Session;
 import com.openclassrooms.starterjwt.models.Teacher;
 import com.openclassrooms.starterjwt.models.User;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.security.test.context.support.WithMockUser;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Date;
 import java.util.Optional;
@@ -38,6 +40,9 @@ public class SessionControllerIT {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @AfterEach
     public void tearDown() {
         sessionRepository.deleteAll();
@@ -45,11 +50,14 @@ public class SessionControllerIT {
         userRepository.deleteAll();
     }
 
+    /**
+     * Teste la récupération d'une session existante par ID.
+     * Doit renvoyer 200 OK avec les informations de la session.
+     */
     @Test
-    @WithMockUser(username = "admin", roles = {"USER", "ADMIN"})
+    @WithMockUser(username = "authenticated_user@email.com")
     public void findById_ShouldReturnSession_WhenSessionExists() throws Exception {
         Teacher teacher = teacherRepository.save(new Teacher(null, "Doe", "John", null, null));
-
         Session session = sessionRepository.save(new Session(null, "Yoga Session", new Date(), "A relaxing yoga session", teacher, null, null, null));
 
         mockMvc.perform(get("/api/session/" + session.getId()))
@@ -57,15 +65,23 @@ public class SessionControllerIT {
                 .andExpect(jsonPath("$.name").value("Yoga Session"));
     }
 
+    /**
+     * Teste la récupération d'une session qui n'existe pas.
+     * Doit renvoyer 404 Not Found.
+     */
     @Test
-    @WithMockUser(username = "admin", roles = {"USER", "ADMIN"})
+    @WithMockUser(username = "authenticated_user@email.com")
     public void findById_ShouldReturnNotFound_WhenSessionDoesNotExist() throws Exception {
         mockMvc.perform(get("/api/session/1234"))
                 .andExpect(status().isNotFound());
     }
 
+    /**
+     * Teste la récupération de toutes les sessions.
+     * Doit renvoyer 200 OK avec une liste de sessions.
+     */
     @Test
-    @WithMockUser(username = "admin", roles = {"USER", "ADMIN"})
+    @WithMockUser(username = "authenticated_user@email.com")
     public void findAll_ShouldReturnSessionsList() throws Exception {
         Teacher teacher = teacherRepository.save(new Teacher(null, "Doe", "John", null, null));
 
@@ -77,11 +93,14 @@ public class SessionControllerIT {
                 .andExpect(jsonPath("$.length()").value(2));
     }
 
+    /**
+     * Teste la suppression d'une session existante.
+     * Doit renvoyer 200 OK et supprimer la session.
+     */
     @Test
-    @WithMockUser(username = "admin", roles = {"USER", "ADMIN"})
+    @WithMockUser(username = "authenticated_user@email.com")
     public void delete_ShouldRemoveSession_WhenSessionExists() throws Exception {
         Teacher teacher = teacherRepository.save(new Teacher(null, "Doe", "John", null, null));
-
         Session session = sessionRepository.save(new Session(null, "Yoga Session", new Date(), "A yoga session", teacher, null, null, null));
 
         mockMvc.perform(delete("/api/session/" + session.getId()))
@@ -91,17 +110,97 @@ public class SessionControllerIT {
         assert (deletedSession.isEmpty());
     }
 
+    /**
+     * Teste l'ajout d'un utilisateur à une session existante.
+     * Doit renvoyer 200 OK.
+     */
     @Test
-    @WithMockUser(username = "admin", roles = {"USER", "ADMIN"})
+    @WithMockUser(username = "authenticated_user@email.com")
     public void participate_ShouldReturnOk_WhenValid() throws Exception {
+        Teacher teacher = teacherRepository.save(new Teacher(null, "Doe", "John", null, null));
+        Session session = sessionRepository.save(new Session(null, "Yoga Session", new Date(), "A yoga session", teacher, null, null, null));
+        User user = userRepository.save(new User("john.doe@email.com", "Doe", "John", "password", false));
+
+        mockMvc.perform(post("/api/session/" + session.getId() + "/participate/" + user.getId()))
+                .andExpect(status().isOk());
+    }
+
+    /**
+     * Teste la suppression d'un utilisateur d'une session.
+     * Doit renvoyer 200 OK.
+     */
+    @Test
+    @WithMockUser(username = "authenticated_user@email.com")
+    public void noLongerParticipate_ShouldReturnOk_WhenValid() throws Exception {
         Teacher teacher = teacherRepository.save(new Teacher(null, "Doe", "John", null, null));
 
         Session session = sessionRepository.save(new Session(null, "Yoga Session", new Date(), "A yoga session", teacher, null, null, null));
 
         User user = userRepository.save(new User("john.doe@email.com", "Doe", "John", "password", false));
 
+        // J'ajoute l'utilisateur à la session avant de tester la suppression
         mockMvc.perform(post("/api/session/" + session.getId() + "/participate/" + user.getId()))
                 .andExpect(status().isOk());
+
+        mockMvc.perform(delete("/api/session/" + session.getId() + "/participate/" + user.getId()))
+                .andExpect(status().isOk());
+    }
+
+
+    /**
+     * Teste la création d'une nouvelle session.
+     * Doit renvoyer 200 OK avec les détails de la session créée.
+     */
+    @Test
+    @WithMockUser(username = "authenticated_user@email.com")
+    public void create_ShouldReturnSession_WhenValid() throws Exception {
+        Teacher teacher = teacherRepository.save(new Teacher(null, "Doe", "John", null, null));
+
+        SessionDto sessionDto = new SessionDto(
+                null,
+                "New Session",
+                new Date(),
+                teacher.getId(),
+                "A new session description",
+                null, // Liste des utilisateurs
+                null, // createdAt
+                null  // updatedAt
+        );
+
+        mockMvc.perform(post("/api/session")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(sessionDto)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("New Session"));
+    }
+
+
+    /**
+     * Teste la mise à jour d'une session existante.
+     * Doit renvoyer 200 OK avec les nouvelles informations mises à jour.
+     */
+    @Test
+    @WithMockUser(username = "authenticated_user@email.com")
+    public void update_ShouldReturnUpdatedSession_WhenValid() throws Exception {
+        Teacher teacher = teacherRepository.save(new Teacher(null, "Doe", "John", null, null));
+        Session session = sessionRepository.save(new Session(null, "Yoga Session", new Date(), "A yoga session", teacher, null, null, null));
+
+        SessionDto updatedSession = new SessionDto(
+                session.getId(),
+                "Updated Session",
+                new Date(),
+                teacher.getId(),
+                "Updated description",
+                null, // Liste des utilisateurs
+                null, // createdAt
+                null  // updatedAt
+        );
+
+        mockMvc.perform(put("/api/session/" + session.getId())
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(updatedSession)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Updated Session"));
     }
 
 }
