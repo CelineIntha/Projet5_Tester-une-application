@@ -149,4 +149,17 @@ class JwtUtilsTest {
 	void validateJwtToken_ShouldReturnFalse_WhenTokenIsNull() {
 		assertFalse(jwtUtils.validateJwtToken(null), "Un token null ne doit pas être valide");
 	}
+
+	/**
+	 * Teste la validation d'un token non supporté.
+	 */
+	@Test
+	void validateJwtToken_ShouldThrowUnsupportedJwtException() {
+		String unsupportedToken = Jwts.builder()
+				.setPayload("invalid-payload")
+				.compact();
+
+		assertFalse(jwtUtils.validateJwtToken(unsupportedToken), "Un token non supporté ne doit pas être valide");
+	}
+
 }

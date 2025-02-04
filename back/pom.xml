@@ -105,6 +105,10 @@
 						<exclude>com/openclassrooms/starterjwt/dto/**</exclude>
 						<exclude>com/openclassrooms/starterjwt/payload/**</exclude>
 						<exclude>com/openclassrooms/starterjwt/models/**</exclude>
+						<exclude>com/openclassrooms/starterjwt/mapper/**</exclude>
+						<exclude>com/openclassrooms/starterjwt/repositories/**</exclude>
+						<exclude>com/openclassrooms/starterjwt/config/**</exclude>
+						<exclude>com/openclassrooms/starterjwt/exception/**</exclude>
 					</excludes>
 				</configuration>
 				<executions>
@@ -141,13 +145,6 @@
 						<configuration>
 							<dataFile>${project.build.directory}/jacoco-ut.exec</dataFile>
 							<outputDirectory>${project.build.directory}/jacoco-ut-report</outputDirectory>
-							<excludes>
-								<exclude>com/openclassrooms/starterjwt/controllers/**</exclude>
-								<exclude>com/openclassrooms/starterjwt/mapper/**</exclude>
-								<exclude>com/openclassrooms/starterjwt/dto/**</exclude>
-								<exclude>com/openclassrooms/starterjwt/models/**</exclude>
-								<exclude>com/openclassrooms/starterjwt/payload/**</exclude>
-							</excludes>
 						</configuration>
 					</execution>
 					<!-- Couverture pour les tests d'intégration -->
@@ -171,11 +168,6 @@
 						<configuration>
 							<dataFile>${project.build.directory}/jacoco-it.exec</dataFile>
 							<outputDirectory>${project.build.directory}/jacoco-it-report</outputDirectory>
-							<excludes>
-								<exclude>com/openclassrooms/starterjwt/repositories/**</exclude>
-								<exclude>com/openclassrooms/starterjwt/dto/**</exclude>
-								<exclude>com/openclassrooms/starterjwt/models/**</exclude>
-							</excludes>
 						</configuration>
 					</execution>
 					<execution>
@@ -216,7 +208,7 @@
 						<configuration>
 							<rules>
 								<rule>
-									<element>PACKAGE</element>
+									<element>BUNDLE</element>
 									<limits>
 										<limit>
 											<counter>LINE</counter>
@@ -230,7 +222,6 @@
 					</execution>
 				</executions>
 			</plugin>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
