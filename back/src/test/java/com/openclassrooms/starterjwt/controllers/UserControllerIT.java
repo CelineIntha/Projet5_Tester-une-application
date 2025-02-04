@@ -109,4 +109,16 @@ public class UserControllerIT {
 		mockMvc.perform(delete("/api/user/invalidId"))
 				.andExpect(status().isBadRequest());
 	}
+
+	/**
+	 * Teste la suppression d'un utilisateur qui n'existe pas.
+	 * Doit renvoyer 404 Not Found.
+	 */
+	@Test
+	@WithMockUser(username = "john.doe@email.com")
+	public void deleteUser_ShouldReturnNotFound_WhenUserDoesNotExist() throws Exception {
+		mockMvc.perform(delete("/api/user/9123499"))
+				.andExpect(status().isNotFound());
+	}
+
 }
