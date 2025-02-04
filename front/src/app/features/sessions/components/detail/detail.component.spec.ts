@@ -15,6 +15,7 @@ import { Teacher } from '../../../../interfaces/teacher.interface';
 import { expect } from '@jest/globals';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from "@angular/material/card";
 
 describe('DetailComponent', () => {
   let component: DetailComponent;
@@ -93,7 +94,8 @@ describe('DetailComponent', () => {
         HttpClientModule,
         MatSnackBarModule,
         ReactiveFormsModule,
-        MatIconModule
+        MatIconModule,
+        MatCardModule,
       ],
       declarations: [DetailComponent],
       providers: [
