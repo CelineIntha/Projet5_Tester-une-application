@@ -162,9 +162,9 @@ public class SessionControllerIT {
                 new Date(),
                 teacher.getId(),
                 "A new session description",
-                null, // Liste des utilisateurs
-                null, // createdAt
-                null  // updatedAt
+                null,
+                null,
+                null
         );
 
         mockMvc.perform(post("/api/session")
@@ -191,9 +191,9 @@ public class SessionControllerIT {
                 new Date(),
                 teacher.getId(),
                 "Updated description",
-                null, // Liste des utilisateurs
-                null, // createdAt
-                null  // updatedAt
+                null,
+                null,
+                null
         );
 
         mockMvc.perform(put("/api/session/" + session.getId())
@@ -202,5 +202,99 @@ public class SessionControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Updated Session"));
     }
+
+    /**
+     * Teste la récupération d'une session avec un ID invalide.
+     * Doit renvoyer 400 Bad Request.
+     */
+    @Test
+    @WithMockUser
+    public void findById_ShouldReturnBadRequest_WhenIdIsInvalid() throws Exception {
+        mockMvc.perform(get("/api/session/invalid-id"))
+                .andExpect(status().isBadRequest());
+    }
+
+    /**
+     * Teste la mise à jour d'une session avec un ID invalide.
+     * Doit renvoyer 400 Bad Request.
+     */
+    @Test
+    @WithMockUser
+    public void update_ShouldReturnBadRequest_WhenIdIsInvalid() throws Exception {
+        Teacher teacher = teacherRepository.save(new Teacher(null, "Doe", "John", null, null));
+
+        SessionDto updatedSession = new SessionDto(
+                null,
+                "Updated Session",
+                new Date(),
+                teacher.getId(),
+                "Updated description",
+                null, null, null
+        );
+
+        mockMvc.perform(put("/api/session/invalid-id")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(updatedSession)))
+                .andExpect(status().isBadRequest());
+    }
+
+    /**
+     * Teste la suppression d'une session inexistante.
+     * Doit renvoyer 404 Not Found.
+     */
+    @Test
+    @WithMockUser
+    public void delete_ShouldReturnNotFound_WhenSessionDoesNotExist() throws Exception {
+        mockMvc.perform(delete("/api/session/999"))
+                .andExpect(status().isNotFound());
+    }
+
+    /**
+     * Teste la suppression d'une session avec un ID invalide.
+     * Doit renvoyer 400 Bad Request.
+     */
+    @Test
+    @WithMockUser
+    public void delete_ShouldReturnBadRequest_WhenIdIsInvalid() throws Exception {
+        mockMvc.perform(delete("/api/session/invalid-id"))
+                .andExpect(status().isBadRequest());
+    }
+
+    /**
+     * Teste la participation à une session avec un utilisateur inexistant.
+     * Doit renvoyer 404 Not Found.
+     */
+    @Test
+    @WithMockUser
+    public void participate_ShouldReturnNotFound_WhenUserDoesNotExist() throws Exception {
+        Teacher teacher = teacherRepository.save(new Teacher(null, "Doe", "John", null, null));
+        Session session = sessionRepository.save(new Session(null, "Yoga Session", new Date(), "A yoga session", teacher, null, null, null));
+
+        mockMvc.perform(post("/api/session/" + session.getId() + "/participate/12391"))
+                .andExpect(status().isNotFound());
+    }
+
+    /**
+     * Teste la participation à une session avec un ID invalide.
+     * Doit renvoyer 400 Bad Request.
+     */
+    @Test
+    @WithMockUser
+    public void participate_ShouldReturnBadRequest_WhenIdIsInvalid() throws Exception {
+        mockMvc.perform(post("/api/session/invalid-id/participate/invalid-user"))
+                .andExpect(status().isBadRequest());
+    }
+
+    /**
+     * Teste l'annulation de la participation à une session avec un ID invalide.
+     * Doit renvoyer 400 Bad Request.
+     */
+    @Test
+    @WithMockUser
+    public void noLongerParticipate_ShouldReturnBadRequest_WhenIdIsInvalid() throws Exception {
+        mockMvc.perform(delete("/api/session/invalid-id/participate/invalid-user"))
+                .andExpect(status().isBadRequest());
+    }
+
 
 }
