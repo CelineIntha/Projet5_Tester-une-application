@@ -3,7 +3,6 @@ package com.openclassrooms.starterjwt.controllers;
 import com.openclassrooms.starterjwt.annotations.IT;
 import com.openclassrooms.starterjwt.models.User;
 import com.openclassrooms.starterjwt.repository.UserRepository;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -25,13 +24,6 @@ public class UserControllerIT {
 	@Autowired
 	private UserRepository userRepository;
 
-	/**
-	 * Nettoie la base de données après chaque test pour éviter les conflits de données.
-	 */
-	@AfterEach
-	public void tearDown() {
-		userRepository.deleteAll();
-	}
 
 	/**
 	 * Teste la récupération d'un utilisateur par son ID.
