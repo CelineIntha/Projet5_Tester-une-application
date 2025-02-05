@@ -78,4 +78,57 @@ describe('Me spec with Account navigation', () => {
     cy.get('[data-cy="user-admin"]').should('not.exist');
   });
 
+  it('Should display delete button for a non-admin user', () => {
+    cy.intercept('GET', '/api/user/1', (req) => {
+      req.reply({
+        statusCode: 200,
+        body: {
+          id: 1,
+          email: 'yoga@studio.com',
+          firstName: 'Yoga',
+          lastName: 'Studio',
+          admin: false,
+          createdAt: '2025-01-04T16:59:26',
+          updatedAt: '2025-01-05T16:59:10',
+        },
+      });
+    }).as('getUserNonAdmin');
+
+    cy.contains('Account').click();
+    cy.wait('@getUserNonAdmin');
+
+    cy.get('[data-cy="delete-account-button"]').should('exist');
+  });
+
+  it('Should trigger delete function when delete button is clicked', () => {
+    cy.intercept('DELETE', '/api/user/1', (req) => {
+      req.reply({
+        statusCode: 200,
+        body: { message: 'Account deleted successfully' },
+      });
+    }).as('deleteAccount');
+
+    cy.intercept('GET', '/api/user/1', (req) => {
+      req.reply({
+        statusCode: 200,
+        body: {
+          id: 1,
+          email: 'yoga@studio.com',
+          firstName: 'Yoga',
+          lastName: 'Studio',
+          admin: false,
+          createdAt: '2025-01-04T16:59:26',
+          updatedAt: '2025-01-05T16:59:10',
+        },
+      });
+    }).as('getUserNonAdmin');
+
+    cy.contains('Account').click();
+    cy.wait('@getUserNonAdmin');
+
+    cy.get('[data-cy="delete-account-button"]').click();
+    cy.wait('@deleteAccount');
+  });
+
+
 });
