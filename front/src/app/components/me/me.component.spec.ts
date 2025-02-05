@@ -72,9 +72,10 @@ describe('MeComponent', () => {
   //        Unit Tests        //
   // ------------------------ //
 
-  it('should create', () => {
+  describe('Unit Tests', () => {
+    it('should create', () => {
     expect(component).toBeTruthy();
-  });
+    });
 
   it('should display "You are admin" if user is admin', () => {
     component.user = { admin: true } as any;
@@ -111,21 +112,21 @@ describe('MeComponent', () => {
 
     expect(deleteSpy).toHaveBeenCalled();
   });
-
+});
   // ------------------------ //
   //     Integration Tests    //
   // ------------------------ //
 
-  it('should fetch user details on initialization', () => {
+  describe('Integration Tests', () => {
+    it('should fetch user details on initialization', () => {
     expect(mockUserService.getById).toHaveBeenCalledWith(mockSessionService.sessionInformation.id.toString());
     expect(component.user).toBeTruthy();
     expect(component.user!.firstName).toBe('John');
   });
-
-  it('should navigate back when back() is called', () => {
+    it('should navigate back when back() is called', () => {
     jest.spyOn(window.history, 'back');
     component.back();
     expect(window.history.back).toHaveBeenCalled();
+    });
   });
-
 });

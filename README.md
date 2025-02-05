@@ -1,41 +1,52 @@
-# YogaApp - Tester une application (Angular & Java)
-Ce projet est une application full-stack composée d'un **front-end Angular** et d'un **back-end Java**. Chaque partie est contenue dans son propre dossier, avec ses propres dépendances et instructions d'installation.
+# YogaApp - Testing an Application (Angular & Java)
+This project is a full-stack application consisting of an **Angular front-end** and a **Java back-end**. Each part is contained in its own folder, with its own dependencies and installation instructions.
 
-## Structure du projet
+
+## Prerequisites
+
+Before getting started, make sure you have installed the following tools:
+
+### Angular
+- [Node.js](https://nodejs.org/) 
+- [Angular CLI](https://angular.dev/installation)
+
+### Java
+- [JDK 11+](https://www.oracle.com/java/technologies/javase/jdk11-archive-downloads.html)
+- [Maven](https://maven.apache.org/)
+
+## Installation and Set Up
+
+### Project Structure
 
 ```
 / project-root
-│── front/       # Projet Angular
-│── back/        # Projet Java Spring Boot
-│── README.md    # Ce fichier
+│── front/       # Angular Project
+│── back/        # Java Spring Boot Project
+│── README.md    # This file
 ```
 
-## Prérequis
+### 1. Start the project
 
-Avant de commencer, assurez-vous d'avoir installé les outils suivants :
+Clone the project
 
-- [Node.js](https://nodejs.org/) (pour Angular)
-- [Angular CLI](https://angular.io/cli)
-- [JDK 11+](https://www.oracle.com/fr/java/technologies/javase/jdk11-archive-downloads.html) (pour Java)
-- [Maven](https://maven.apache.org/)
+> git clone https://github.com/CelineIntha/Projet5_Tester-une-application.git
 
-## Installation et démarrage
 
-### 1. Back-end (Java Spring Boot)
+### 2. Back-end (Java Spring Boot)
 
-📌 **Instructions détaillées dans** [`/back/README.md`](./back/README.md)
+📌 **Detailed instructions in** [`/back/README.md`](./back/README.md)
 
 ```sh
 cd back
 mvn clean install
-mvn spring-boot:run 
+mvn spring-boot:run
 ```
 
-Le back-end tournera sur `http://localhost:3306`.
+The back-end will run on `http://localhost:3306`.
 
-### 2. Front-end (Angular)
+### 3. Front-end (Angular)
 
-📌 **Instructions détaillées dans** [`/front/README.md`](./front/README.md)
+📌 **Detailed instructions in** [`/front/README.md`](./front/README.md)
 
 ```sh
 cd front/yoga
@@ -43,25 +54,23 @@ npm install
 ng serve
 ```
 
-L'application Angular sera accessible sur `http://localhost:4200`.
+The Angular application will be accessible at `http://localhost:4200`.
 
 ## Tests
 
-### Tests unitaires
+### Unit Tests
 
-- **Back-end** : `mvn test` (JUnit / Mockito)
-- **Front-end** : `ng test` (Jest)
+- **Back-end**: `mvn test` (JUnit / Mockito)
+- **Front-end**: `ng test` (Jest)
 
-### Tests d'intégration
+### Integration Tests
 
-- **Back-end** : `mvn verify` 
-- **Front-end** : `ng e2e` Tests E2E avec Cypress 
+- **Back-end**: `mvn verify` or `mvn clean test`
+- **Front-end**: `ng e2e` E2E tests with Cypress
 
 ---
 
-📌 Consultez les README spécifiques pour plus d'instructions :
+📌 Check the specific README files for more instructions:
 - [Front-end (Angular)](./front/README.md)
 - [Back-end (Java)](./back/README.md)
-
-
 
