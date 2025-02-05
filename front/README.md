@@ -2,16 +2,11 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.1.0.
 
-
-### 1. Go inside this folder:
-
-> cd yoga
-
-### 2. Install dependencies:
+### 1. Install dependencies:
 
 > npm install
 
-### 3. Launch Front-end:
+### 2. Launch Front-end:
 
 
 > ng serve

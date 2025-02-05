@@ -7,7 +7,12 @@ To install and run the project, follow these steps:
 1. **Set up a local MySQL server** using MAMP, XAMPP, or WAMP. Ensure your MySQL database is running and update the database connection details in `application.properties`.
 
 
-2. **Configure your MySQL database:**
+2. **Database (MySQL)** : to set up the database schema, run the SQL script available at:
+
+> ressources/sql/script.sql
+
+
+3. **Configure your MySQL database:**
    - Open the `application.properties` file and update the connection settings:
      ```properties
      spring.datasource.url=jdbc:mysql://localhost:3306/yoga?allowPublicKeyRetrieval=true
@@ -17,12 +22,12 @@ To install and run the project, follow these steps:
    ⚠️ Ensure that the MySQL port is set to **3306**.
 
 
-3. **Install dependencies and build the project:**
+4. **Install dependencies and build the project:**
     ```
     mvn clean install
     ```
 
-4. **Run the application:**
+5. **Run the application:**
     ```
     mvn spring-boot:run
     ```
