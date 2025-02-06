@@ -32,6 +32,7 @@ public class UserControllerIT {
 	@Test
 	@WithMockUser(username = "john.doe@email.com")
 	public void findById_ShouldReturnUser_WhenUserExists() throws Exception {
+		userRepository.deleteAll();
 		User user = new User("john.doe@email.com", "Doe", "John", "password", true);
 		userRepository.save(user);
 
@@ -70,6 +71,7 @@ public class UserControllerIT {
 	@Test
 	@WithMockUser(username = "john.doe@email.com")
 	public void deleteUser_ShouldReturnOk_WhenAuthorized() throws Exception {
+		userRepository.deleteAll();
 		User user = new User("john.doe@email.com", "Doe", "John", "password", true);
 		userRepository.save(user);
 
